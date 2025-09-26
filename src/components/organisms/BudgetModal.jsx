@@ -48,7 +48,8 @@ setFormData({
   const loadCategories = async () => {
     try {
       const data = await categoryService.getAll();
-      setCategories(data.filter(cat => cat.type === "expense"));
+setCategories(data.filter(cat => cat.type_c === "expense"));
+setCategories(data.filter(cat => cat.type_c === "expense"));
     } catch (error) {
       toast.error("Failed to load categories");
     }

@@ -20,8 +20,12 @@ async getAll() {
         fields: [
           {"field": {"Name": "Id"}},
           {"field": {"Name": "Name"}},
-          {"field": {"Name": "name_c"}},
+{"field": {"Name": "name_c"}},
           {"field": {"Name": "type_c"}},
+          {"field": {"Name": "color_c"}},
+{"field": {"Name": "name_c"}},
+          {"field": {"Name": "type_c"}},
+          {"field": {"Name": "color_c"}},
           {"field": {"Name": "color_c"}},
           {"field": {"Name": "is_default_c"}}
         ]
@@ -49,6 +53,10 @@ async getById(id) {
           {"field": {"Name": "Id"}},
           {"field": {"Name": "Name"}},
           {"field": {"Name": "name_c"}},
+{"field": {"Name": "name_c"}},
+          {"field": {"Name": "type_c"}},
+          {"field": {"Name": "color_c"}},
+{"field": {"Name": "name_c"}},
           {"field": {"Name": "type_c"}},
           {"field": {"Name": "color_c"}},
           {"field": {"Name": "is_default_c"}}
