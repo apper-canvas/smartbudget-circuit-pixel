@@ -1,6 +1,7 @@
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import React from "react";
+import { format } from "date-fns";
 
 export function cn(...inputs) {
   return twMerge(clsx(inputs))
@@ -17,7 +18,6 @@ export function isValidDate(date) {
 export function safeFormatDate(date, formatString, fallback = "Invalid Date") {
   if (!isValidDate(date)) return fallback;
   try {
-    const { format } = require("date-fns");
     return format(new Date(date), formatString);
   } catch (error) {
 return fallback;
