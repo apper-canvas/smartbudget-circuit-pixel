@@ -90,8 +90,8 @@ const BudgetModal = ({ isOpen, onClose, budget = null, onSuccess }) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const getCategoryOptions = () => {
-    return categories.map(cat => ({ value: cat.name, label: cat.name }));
+const getCategoryOptions = () => {
+    return categories.map(cat => ({ value: cat.name_c, label: cat.name_c }));
   };
 
   const getMonthOptions = () => {
