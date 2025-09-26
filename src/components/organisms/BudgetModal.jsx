@@ -28,8 +28,8 @@ const BudgetModal = ({ isOpen, onClose, budget = null, onSuccess }) => {
 
   useEffect(() => {
     if (budget) {
-      setFormData({
-        category: budget.category,
+setFormData({
+        category: budget.category_c || budget.category,
         limit: budget.limit.toString(),
         month: budget.month,
         year: budget.year
@@ -91,7 +91,7 @@ const BudgetModal = ({ isOpen, onClose, budget = null, onSuccess }) => {
   };
 
 const getCategoryOptions = () => {
-    return categories.map(cat => ({ value: cat.name_c, label: cat.name_c }));
+    return categories.map(cat => ({ value: cat.Name, label: cat.Name }));
   };
 
   const getMonthOptions = () => {
