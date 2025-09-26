@@ -14,7 +14,7 @@ class CategoryService {
     return this.apperClient;
   }
 
-  async getAll() {
+async getAll() {
     try {
       const params = {
         fields: [
@@ -42,7 +42,7 @@ class CategoryService {
     }
   }
 
-  async getById(id) {
+async getById(id) {
     try {
       const params = {
         fields: [
@@ -73,7 +73,7 @@ class CategoryService {
   async create(categoryData) {
     try {
       const params = {
-        records: [{
+records: [{
           Name: categoryData.name_c || categoryData.name,
           name_c: categoryData.name_c || categoryData.name,
           type_c: categoryData.type_c || categoryData.type,
@@ -118,7 +118,7 @@ class CategoryService {
       const params = {
         records: [{
           Id: id,
-          Name: updateData.name_c || updateData.name,
+Name: updateData.name_c || updateData.name,
           name_c: updateData.name_c || updateData.name,
           type_c: updateData.type_c || updateData.type,
           color_c: updateData.color_c || updateData.color,

@@ -64,8 +64,8 @@ if (!transaction.date || isNaN(new Date(transaction.date).getTime())) {
             const transactionYear = transactionDate.getFullYear();
             
             return (
-              transaction.type === "expense" &&
-              transaction.category === budget.category &&
+transaction.type === "expense" &&
+              transaction.category === (budget.category_c || budget.category) &&
               transactionMonth === selectedMonth &&
               transactionYear === selectedYear
             );

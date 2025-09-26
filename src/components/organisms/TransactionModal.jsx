@@ -93,10 +93,10 @@ date: safeFormatDate(new Date(), "yyyy-MM-dd", "")
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const getFilteredCategories = () => {
+const getFilteredCategories = () => {
     return categories
-      .filter(cat => cat.type === formData.type)
-      .map(cat => ({ value: cat.name, label: cat.name }));
+      .filter(cat => (cat.type_c || cat.type) === formData.type)
+      .map(cat => ({ value: (cat.name_c || cat.name), label: (cat.name_c || cat.name) }));
   };
 
   return (
