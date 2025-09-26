@@ -117,15 +117,22 @@ const Transactions = () => {
           endDate = null;
       }
 
-      if (startDate && endDate) {
+if (startDate && endDate) {
         filtered = filtered.filter(transaction => {
+          if (!transaction.date || isNaN(new Date(transaction.date).getTime())) {
+            return false;
+          }
           const transactionDate = new Date(transaction.date);
           return transactionDate >= startDate && transactionDate <= endDate;
         });
       }
     }
 
-    return filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+    return filtered.sort((a, b) => {
+      const dateA = a.date && !isNaN(new Date(a.date).getTime()) ? new Date(a.date) : new Date(0);
+      const dateB = b.date && !isNaN(new Date(b.date).getTime()) ? new Date(b.date) : new Date(0);
+      return dateB - dateA;
+    });
   };
 
   const getStats = () => {

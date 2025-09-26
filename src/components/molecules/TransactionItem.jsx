@@ -64,7 +64,9 @@ const TransactionItem = ({ transaction, onEdit, onDelete }) => {
               {transaction.category}
             </Badge>
             <span className="text-xs text-gray-500">
-              {format(new Date(transaction.date), "MMM dd, yyyy")}
+{transaction.date && !isNaN(new Date(transaction.date).getTime()) 
+                ? format(new Date(transaction.date), "MMM dd, yyyy")
+                : "Invalid Date"}
             </span>
           </div>
         </div>

@@ -64,6 +64,8 @@ const Goals = () => {
     const totalTargetAmount = goals.reduce((sum, goal) => sum + goal.targetAmount, 0);
     const totalCurrentAmount = goals.reduce((sum, goal) => sum + goal.currentAmount, 0);
     const overdue = goals.filter(goal => 
+goal.targetDate && 
+      !isNaN(new Date(goal.targetDate).getTime()) &&
       differenceInDays(new Date(goal.targetDate), new Date()) < 0 && 
       goal.currentAmount < goal.targetAmount
     ).length;
@@ -89,9 +91,15 @@ const Goals = () => {
       if (!aCompleted && bCompleted) return -1;
       
       // Overdue goals first (among incomplete)
+const aDateValid = a.targetDate && !isNaN(new Date(a.targetDate).getTime());
+      const bDateValid = b.targetDate && !isNaN(new Date(b.targetDate).getTime());
+      
+      if (!aDateValid && !bDateValid) return 0;
+      if (!aDateValid) return 1;
+      if (!bDateValid) return -1;
+      
       const aDaysLeft = differenceInDays(new Date(a.targetDate), new Date());
       const bDaysLeft = differenceInDays(new Date(b.targetDate), new Date());
-      
       if (aDaysLeft < 0 && bDaysLeft >= 0) return -1;
       if (aDaysLeft >= 0 && bDaysLeft < 0) return 1;
       

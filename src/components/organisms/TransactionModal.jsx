@@ -24,13 +24,17 @@ const TransactionModal = ({ isOpen, onClose, transaction = null, onSuccess }) =>
   }, []);
 
   useEffect(() => {
-    if (transaction) {
+if (transaction) {
+      const transactionDate = transaction.date && !isNaN(new Date(transaction.date).getTime()) 
+        ? new Date(transaction.date) 
+        : new Date();
+      
       setFormData({
         amount: transaction.amount.toString(),
         type: transaction.type,
         category: transaction.category,
         description: transaction.description,
-        date: format(new Date(transaction.date), "yyyy-MM-dd")
+        date: format(transactionDate, "yyyy-MM-dd")
       });
     } else {
       setFormData({

@@ -72,7 +72,8 @@ const Dashboard = () => {
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
     
-    const monthlyTransactions = transactions.filter(t => {
+const monthlyTransactions = transactions.filter(t => {
+      if (!t.date || isNaN(new Date(t.date).getTime())) return false;
       const date = new Date(t.date);
       return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
     });
@@ -101,11 +102,11 @@ const Dashboard = () => {
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
     
-    const monthlyExpenses = transactions.filter(t => {
+const monthlyExpenses = transactions.filter(t => {
+      if (!t.date || isNaN(new Date(t.date).getTime())) return false;
       const date = new Date(t.date);
       return t.type === "expense" && date.getMonth() === currentMonth && date.getFullYear() === currentYear;
     });
-
     const categoryTotals = monthlyExpenses.reduce((acc, transaction) => {
       acc[transaction.category] = (acc[transaction.category] || 0) + transaction.amount;
       return acc;
@@ -118,8 +119,12 @@ const Dashboard = () => {
   };
 
   const getRecentTransactions = () => {
-    return transactions
-      .sort((a, b) => new Date(b.date) - new Date(a.date))
+return transactions
+      .sort((a, b) => {
+        const dateA = a.date && !isNaN(new Date(a.date).getTime()) ? new Date(a.date) : new Date(0);
+        const dateB = b.date && !isNaN(new Date(b.date).getTime()) ? new Date(b.date) : new Date(0);
+        return dateB - dateA;
+      })
       .slice(0, 5);
   };
 

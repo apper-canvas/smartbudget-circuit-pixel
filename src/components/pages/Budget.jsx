@@ -56,6 +56,9 @@ const Budget = () => {
       const updatedBudgets = await Promise.all(
         filteredBudgets.map(async (budget) => {
           const monthlyExpenses = transactionsData.filter(transaction => {
+if (!transaction.date || isNaN(new Date(transaction.date).getTime())) {
+              return null;
+            }
             const transactionDate = new Date(transaction.date);
             const transactionMonth = months[transactionDate.getMonth()];
             const transactionYear = transactionDate.getFullYear();
