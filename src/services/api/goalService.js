@@ -1,61 +1,197 @@
-import goalData from "@/services/mockData/goals.json";
-
-// Simulate network delay
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
 class GoalService {
   constructor() {
-    this.goals = [...goalData];
+    this.apperClient = null;
+  }
+
+  getApperClient() {
+    if (!this.apperClient) {
+      const { ApperClient } = window.ApperSDK;
+      this.apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+    }
+    return this.apperClient;
   }
 
   async getAll() {
-    await delay(300);
-    return [...this.goals];
+    try {
+      const params = {
+        fields: [
+          {"field": {"Name": "Id"}},
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "name_c"}},
+          {"field": {"Name": "target_amount_c"}},
+          {"field": {"Name": "current_amount_c"}},
+          {"field": {"Name": "target_date_c"}},
+          {"field": {"Name": "created_at_c"}}
+        ]
+      };
+      
+      const apperClient = this.getApperClient();
+      const response = await apperClient.fetchRecords('goal_c', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        return [];
+      }
+      
+      return response.data || [];
+    } catch (error) {
+      console.error("Error fetching goals:", error?.response?.data?.message || error);
+      return [];
+    }
   }
 
   async getById(id) {
-    await delay(200);
-    const goal = this.goals.find(g => g.Id === id);
-    if (!goal) {
-      throw new Error("Goal not found");
+    try {
+      const params = {
+        fields: [
+          {"field": {"Name": "Id"}},
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "name_c"}},
+          {"field": {"Name": "target_amount_c"}},
+          {"field": {"Name": "current_amount_c"}},
+          {"field": {"Name": "target_date_c"}},
+          {"field": {"Name": "created_at_c"}}
+        ]
+      };
+      
+      const apperClient = this.getApperClient();
+      const response = await apperClient.getRecordById('goal_c', id, params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        return null;
+      }
+      
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching goal ${id}:`, error?.response?.data?.message || error);
+      return null;
     }
-    return { ...goal };
   }
 
   async create(goalData) {
-    await delay(400);
-    const maxId = this.goals.length > 0 ? 
-      Math.max(...this.goals.map(g => g.Id)) : 0;
-    
-    const newGoal = {
-      Id: maxId + 1,
-      ...goalData
-    };
-    
-    this.goals.push(newGoal);
-    return { ...newGoal };
+    try {
+      const params = {
+        records: [{
+          Name: goalData.name_c || goalData.name,
+          name_c: goalData.name_c || goalData.name,
+          target_amount_c: goalData.target_amount_c || goalData.targetAmount,
+          current_amount_c: goalData.current_amount_c || goalData.currentAmount || 0,
+          target_date_c: goalData.target_date_c || goalData.targetDate,
+          created_at_c: goalData.created_at_c || goalData.createdAt || new Date().toISOString()
+        }]
+      };
+      
+      const apperClient = this.getApperClient();
+      const response = await apperClient.createRecord('goal_c', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        return null;
+      }
+      
+      if (response.results) {
+        const successful = response.results.filter(r => r.success);
+        const failed = response.results.filter(r => !r.success);
+        
+        if (failed.length > 0) {
+          console.error(`Failed to create ${failed.length} goals:`, failed);
+          failed.forEach(record => {
+            if (record.errors) {
+              record.errors.forEach(error => console.error(`${error.fieldLabel}: ${error}`));
+            }
+            if (record.message) console.error(record.message);
+          });
+        }
+        return successful.length > 0 ? successful[0].data : null;
+      }
+      
+      return null;
+    } catch (error) {
+      console.error("Error creating goal:", error?.response?.data?.message || error);
+      return null;
+    }
   }
 
   async update(id, updateData) {
-    await delay(350);
-    const index = this.goals.findIndex(g => g.Id === id);
-    if (index === -1) {
-      throw new Error("Goal not found");
+    try {
+      const params = {
+        records: [{
+          Id: id,
+          Name: updateData.name_c || updateData.name,
+          name_c: updateData.name_c || updateData.name,
+          target_amount_c: updateData.target_amount_c || updateData.targetAmount,
+          current_amount_c: updateData.current_amount_c || updateData.currentAmount,
+          target_date_c: updateData.target_date_c || updateData.targetDate
+        }]
+      };
+      
+      const apperClient = this.getApperClient();
+      const response = await apperClient.updateRecord('goal_c', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        return null;
+      }
+      
+      if (response.results) {
+        const successful = response.results.filter(r => r.success);
+        const failed = response.results.filter(r => !r.success);
+        
+        if (failed.length > 0) {
+          console.error(`Failed to update ${failed.length} goals:`, failed);
+          failed.forEach(record => {
+            if (record.errors) {
+              record.errors.forEach(error => console.error(`${error.fieldLabel}: ${error}`));
+            }
+            if (record.message) console.error(record.message);
+          });
+        }
+        return successful.length > 0 ? successful[0].data : null;
+      }
+      
+      return null;
+    } catch (error) {
+      console.error("Error updating goal:", error?.response?.data?.message || error);
+      return null;
     }
-    
-    this.goals[index] = { ...this.goals[index], ...updateData };
-    return { ...this.goals[index] };
   }
 
   async delete(id) {
-    await delay(250);
-    const index = this.goals.findIndex(g => g.Id === id);
-    if (index === -1) {
-      throw new Error("Goal not found");
+    try {
+      const params = { 
+        RecordIds: [id]
+      };
+      
+      const apperClient = this.getApperClient();
+      const response = await apperClient.deleteRecord('goal_c', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        return false;
+      }
+      
+      if (response.results) {
+        const successful = response.results.filter(r => r.success);
+        const failed = response.results.filter(r => !r.success);
+        
+        if (failed.length > 0) {
+          console.error(`Failed to delete ${failed.length} goals:`, failed);
+          failed.forEach(record => {
+            if (record.message) console.error(record.message);
+          });
+        }
+        return successful.length === 1;
+      }
+      
+      return false;
+    } catch (error) {
+      console.error("Error deleting goal:", error?.response?.data?.message || error);
+      return false;
     }
-    
-    const deleted = this.goals.splice(index, 1)[0];
-    return { ...deleted };
   }
 }
 
