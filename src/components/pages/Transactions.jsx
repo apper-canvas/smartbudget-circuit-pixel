@@ -163,7 +163,10 @@ if (startDate && endDate) {
   const filteredTransactions = getFilteredTransactions();
   const stats = getStats();
 
-const categoryOptions = categories.map(cat => ({ value: (cat.name_c || cat.name), label: (cat.name_c || cat.name) }));
+const categoryOptions = categories.map(cat => ({ 
+    value: cat.name_c || cat.Name || cat.name, 
+    label: cat.name_c || cat.Name || cat.name 
+  }));
   const typeOptions = [
     { value: "income", label: "Income" },
     { value: "expense", label: "Expense" }

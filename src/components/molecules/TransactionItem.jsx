@@ -18,7 +18,7 @@ const TransactionItem = ({ transaction, onEdit, onDelete }) => {
     return type === "income" ? "text-success-600" : "text-error-600";
   };
 
-  const getCategoryIcon = (category) => {
+const getCategoryIcon = (category) => {
     const icons = {
       "Food & Dining": "UtensilsCrossed",
       "Transportation": "Car",
@@ -36,7 +36,12 @@ const TransactionItem = ({ transaction, onEdit, onDelete }) => {
       "Investments": "TrendingUp",
       "Side Hustle": "Zap"
     };
-    return icons[category] || "DollarSign";
+    
+    // Handle category as object or string
+    const categoryName = typeof category === 'object' ? 
+      (category?.name_c || category?.Name || category?.name) : category;
+    
+    return icons[categoryName] || "DollarSign";
   };
 
   return (
