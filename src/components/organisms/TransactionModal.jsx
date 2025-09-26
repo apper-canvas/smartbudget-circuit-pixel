@@ -32,9 +32,9 @@ if (transaction) {
       setFormData({
         amount: transaction.amount.toString(),
         type: transaction.type,
-        category: transaction.category,
+category: transaction.category,
         description: transaction.description,
-date: safeFormatDate(transactionDate, "yyyy-MM-dd", "")
+        date: safeFormatDate(transactionDate, "yyyy-MM-dd", "")
       });
     } else {
       setFormData({
@@ -94,7 +94,7 @@ date: safeFormatDate(new Date(), "yyyy-MM-dd", "")
   };
 
 const getFilteredCategories = () => {
-    return categories
+return categories
       .filter(cat => (cat.type_c || cat.type) === formData.type)
       .map(cat => ({ 
         value: cat.name_c || cat.Name || cat.name, 
@@ -167,7 +167,7 @@ const getFilteredCategories = () => {
                 <FormField
                   type="select"
                   label="Category"
-                  value={formData.category}
+value={formData.category}
                   onChange={(e) => handleChange("category", e.target.value)}
                   options={getFilteredCategories()}
                   placeholder="Select a category"

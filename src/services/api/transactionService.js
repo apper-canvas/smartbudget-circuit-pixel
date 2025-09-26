@@ -14,7 +14,7 @@ class TransactionService {
     return this.apperClient;
   }
 
-  async getAll() {
+async getAll() {
     try {
       const params = {
         fields: [
@@ -37,14 +37,26 @@ class TransactionService {
         return [];
       }
       
-      return response.data || [];
+      // Normalize field names for UI consumption
+      const normalizedData = (response.data || []).map(transaction => ({
+        Id: transaction.Id,
+        Name: transaction.Name,
+        amount: transaction.amount_c,
+        type: transaction.type_c,
+        category: transaction.category_c,
+        description: transaction.description_c,
+        date: transaction.date_c,
+        createdAt: transaction.created_at_c
+      }));
+      
+      return normalizedData;
     } catch (error) {
       console.error("Error fetching transactions:", error?.response?.data?.message || error);
       return [];
     }
   }
 
-  async getById(id) {
+async getById(id) {
     try {
       const params = {
         fields: [
@@ -67,7 +79,21 @@ class TransactionService {
         return null;
       }
       
-      return response.data;
+      // Normalize field names for UI consumption
+      if (response.data) {
+        return {
+          Id: response.data.Id,
+          Name: response.data.Name,
+          amount: response.data.amount_c,
+          type: response.data.type_c,
+          category: response.data.category_c,
+          description: response.data.description_c,
+          date: response.data.date_c,
+          createdAt: response.data.created_at_c
+        };
+      }
+      
+      return null;
     } catch (error) {
       console.error(`Error fetching transaction ${id}:`, error?.response?.data?.message || error);
       return null;
@@ -77,13 +103,13 @@ class TransactionService {
   async create(transactionData) {
     try {
       const params = {
-        records: [{
-          Name: transactionData.description_c || transactionData.description,
-          amount_c: transactionData.amount_c || transactionData.amount,
-          type_c: transactionData.type_c || transactionData.type,
-          category_c: transactionData.category_c || transactionData.category,
-          description_c: transactionData.description_c || transactionData.description,
-          date_c: transactionData.date_c || transactionData.date,
+records: [{
+          Name: transactionData.description,
+          amount_c: transactionData.amount,
+          type_c: transactionData.type,
+          category_c: transactionData.category,
+          description_c: transactionData.description,
+          date_c: transactionData.date,
           created_at_c: transactionData.created_at_c || transactionData.createdAt || new Date().toISOString()
         }]
       };
@@ -126,10 +152,10 @@ class TransactionService {
           Id: id,
           Name: updateData.description_c || updateData.description,
           amount_c: updateData.amount_c || updateData.amount,
-          type_c: updateData.type_c || updateData.type,
-          category_c: updateData.category_c || updateData.category,
-          description_c: updateData.description_c || updateData.description,
-          date_c: updateData.date_c || updateData.date
+type_c: updateData.type,
+          category_c: updateData.category,
+          description_c: updateData.description,
+          date_c: updateData.date
         }]
       };
       

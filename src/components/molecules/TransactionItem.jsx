@@ -65,7 +65,7 @@ const getCategoryIcon = (category) => {
             {transaction.description}
           </p>
           <div className="flex items-center space-x-2 mt-1">
-            <Badge variant={transaction.type === "income" ? "success" : "default"} size="sm">
+<Badge variant={transaction.type === "income" ? "success" : "default"} size="sm">
               {transaction.category}
             </Badge>
             <span className="text-xs text-gray-500">

@@ -37,7 +37,7 @@ const Transactions = () => {
     setLoading(true);
     setError("");
     try {
-      const [transactionsData, categoriesData] = await Promise.all([
+const [transactionsData, categoriesData] = await Promise.all([
         transactionService.getAll(),
         categoryService.getAll()
       ]);
