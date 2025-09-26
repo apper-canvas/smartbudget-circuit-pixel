@@ -268,10 +268,12 @@ const Dashboard = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {goals.slice(0, 3).map((goal) => {
-              const progress = (goal.currentAmount / goal.targetAmount) * 100;
+const currentAmount = goal.currentAmount || 0;
+              const targetAmount = goal.targetAmount || 0;
+              const progress = targetAmount > 0 ? (currentAmount / targetAmount) * 100 : 0;
               return (
                 <div key={goal.Id} className="p-4 border border-gray-200 rounded-lg">
-                  <h4 className="font-medium text-gray-900 mb-2">{goal.name}</h4>
+                  <h4 className="font-medium text-gray-900 mb-2">{goal.name || 'Untitled Goal'}</h4>
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">Progress</span>
@@ -284,8 +286,8 @@ const Dashboard = () => {
                       />
                     </div>
                     <div className="flex justify-between text-xs text-gray-500">
-                      <span>${goal.currentAmount.toLocaleString()}</span>
-                      <span>${goal.targetAmount.toLocaleString()}</span>
+                      <span>${currentAmount.toLocaleString()}</span>
+                      <span>${targetAmount.toLocaleString()}</span>
                     </div>
                   </div>
                 </div>
