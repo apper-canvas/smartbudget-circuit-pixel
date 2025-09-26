@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Button from "@/components/atoms/Button";
 import FormField from "@/components/molecules/FormField";
 import ApperIcon from "@/components/ApperIcon";
-import { format } from "date-fns";
+import { safeFormatDate } from "@/utils/cn";
 import { toast } from "react-toastify";
 import { transactionService } from "@/services/api/transactionService";
 import { categoryService } from "@/services/api/categoryService";
@@ -16,7 +16,7 @@ const TransactionModal = ({ isOpen, onClose, transaction = null, onSuccess }) =>
     type: "expense",
     category: "",
     description: "",
-    date: format(new Date(), "yyyy-MM-dd")
+date: safeFormatDate(new Date(), "yyyy-MM-dd", "")
   });
 
   useEffect(() => {
@@ -34,7 +34,7 @@ if (transaction) {
         type: transaction.type,
         category: transaction.category,
         description: transaction.description,
-        date: format(transactionDate, "yyyy-MM-dd")
+date: safeFormatDate(transactionDate, "yyyy-MM-dd", "")
       });
     } else {
       setFormData({
@@ -42,7 +42,7 @@ if (transaction) {
         type: "expense",
         category: "",
         description: "",
-        date: format(new Date(), "yyyy-MM-dd")
+date: safeFormatDate(new Date(), "yyyy-MM-dd", "")
       });
     }
   }, [transaction, isOpen]);

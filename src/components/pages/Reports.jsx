@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import SpendingChart from "@/components/organisms/SpendingChart";
-import StatsCard from "@/components/molecules/StatsCard";
-import Button from "@/components/atoms/Button";
-import Select from "@/components/atoms/Select";
-import ApperIcon from "@/components/ApperIcon";
-import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
 import { transactionService } from "@/services/api/transactionService";
 import { budgetService } from "@/services/api/budgetService";
-import { format, startOfMonth, endOfMonth, subMonths, eachDayOfInterval, parseISO } from "date-fns";
+import { eachDayOfInterval, endOfMonth, format, parseISO, startOfMonth, subMonths } from "date-fns";
+import { isValidDate, safeFormatDate } from "@/utils/cn";
+import ApperIcon from "@/components/ApperIcon";
+import StatsCard from "@/components/molecules/StatsCard";
+import Loading from "@/components/ui/Loading";
+import Error from "@/components/ui/Error";
+import SpendingChart from "@/components/organisms/SpendingChart";
+import Button from "@/components/atoms/Button";
+import Select from "@/components/atoms/Select";
+import Transactions from "@/components/pages/Transactions";
+import Budget from "@/components/pages/Budget";
 
 const Reports = () => {
   const [transactions, setTransactions] = useState([]);
@@ -75,7 +78,8 @@ const Reports = () => {
     if (!startDate || !endDate) return transactions;
 
     return transactions.filter(transaction => {
-      const transactionDate = parseISO(transaction.date);
+const transactionDate = isValidDate(transaction.date) ? parseISO(transaction.date) : null;
+      if (!transactionDate) return false;
       return transactionDate >= startDate && transactionDate <= endDate;
     });
   };
@@ -135,7 +139,8 @@ const Reports = () => {
 
       return dateRange.map(date => {
         const dayExpenses = expenses.filter(transaction => {
-          const transactionDate = parseISO(transaction.date);
+const transactionDate = isValidDate(transaction.date) ? parseISO(transaction.date) : null;
+          if (!transactionDate) return;
           return format(transactionDate, "yyyy-MM-dd") === format(date, "yyyy-MM-dd");
         });
 
@@ -193,7 +198,7 @@ const Reports = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `financial-report-${format(new Date(), "yyyy-MM-dd")}.json`;
+a.download = `financial-report-${safeFormatDate(new Date(), "yyyy-MM-dd", "export")}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

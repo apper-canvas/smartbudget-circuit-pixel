@@ -1,7 +1,7 @@
 import React from "react";
 import ApperIcon from "@/components/ApperIcon";
 import Badge from "@/components/atoms/Badge";
-import { format } from "date-fns";
+import { safeFormatDate } from "@/utils/cn";
 
 const TransactionItem = ({ transaction, onEdit, onDelete }) => {
   const formatAmount = (amount, type) => {
@@ -64,9 +64,7 @@ const TransactionItem = ({ transaction, onEdit, onDelete }) => {
               {transaction.category}
             </Badge>
             <span className="text-xs text-gray-500">
-{transaction.date && !isNaN(new Date(transaction.date).getTime()) 
-                ? format(new Date(transaction.date), "MMM dd, yyyy")
-                : "Invalid Date"}
+{safeFormatDate(transaction.date, "MMM dd, yyyy", "Invalid Date")}
             </span>
           </div>
         </div>

@@ -3,11 +3,14 @@ import Card from "@/components/atoms/Card";
 import ProgressBar from "@/components/atoms/ProgressBar";
 import Badge from "@/components/atoms/Badge";
 import ApperIcon from "@/components/ApperIcon";
-import { format, differenceInDays } from "date-fns";
+import { differenceInDays } from "date-fns";
+import { safeFormatDate, isValidDate } from "@/utils/cn";
 
 const GoalCard = ({ goal, onEdit, onDelete }) => {
   const progress = (goal.currentAmount / goal.targetAmount) * 100;
-  const daysRemaining = differenceInDays(new Date(goal.targetDate), new Date());
+const daysRemaining = isValidDate(goal.targetDate) 
+    ? differenceInDays(new Date(goal.targetDate), new Date())
+    : 0;
   const isOverdue = daysRemaining < 0;
   const isCompleted = progress >= 100;
 
@@ -42,7 +45,7 @@ const GoalCard = ({ goal, onEdit, onDelete }) => {
           <div className="flex items-center space-x-2">
             {getStatusBadge()}
             <span className="text-sm text-gray-500">
-              Due {format(new Date(goal.targetDate), "MMM dd, yyyy")}
+Due {safeFormatDate(goal.targetDate, "MMM dd, yyyy", "Invalid Date")}
             </span>
           </div>
         </div>

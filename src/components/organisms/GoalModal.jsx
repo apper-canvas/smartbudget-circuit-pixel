@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Button from "@/components/atoms/Button";
 import FormField from "@/components/molecules/FormField";
 import ApperIcon from "@/components/ApperIcon";
-import { format } from "date-fns";
+import { safeFormatDate } from "@/utils/cn";
 import { toast } from "react-toastify";
 import { goalService } from "@/services/api/goalService";
 
@@ -13,7 +13,7 @@ const GoalModal = ({ isOpen, onClose, goal = null, onSuccess }) => {
     name: "",
     targetAmount: "",
     currentAmount: "",
-    targetDate: format(new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), "yyyy-MM-dd")
+targetDate: safeFormatDate(new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), "yyyy-MM-dd", "")
   });
 
   useEffect(() => {
@@ -22,14 +22,14 @@ const GoalModal = ({ isOpen, onClose, goal = null, onSuccess }) => {
         name: goal.name,
         targetAmount: goal.targetAmount.toString(),
         currentAmount: goal.currentAmount.toString(),
-        targetDate: format(new Date(goal.targetDate), "yyyy-MM-dd")
+targetDate: safeFormatDate(goal.targetDate, "yyyy-MM-dd", "")
       });
     } else {
       setFormData({
         name: "",
         targetAmount: "",
         currentAmount: "0",
-        targetDate: format(new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), "yyyy-MM-dd")
+targetDate: safeFormatDate(new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), "yyyy-MM-dd", "")
       });
     }
   }, [goal, isOpen]);
